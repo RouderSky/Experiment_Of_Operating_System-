@@ -1,4 +1,4 @@
-#ifndef __STRUCT_H__
+ï»¿#ifndef __STRUCT_H__
 #define __STRUCT_H__
 
 enum MissionState
@@ -11,11 +11,11 @@ enum MissionState
 struct Mission
 {
 	MissionState state;
-	int priority;			//ÊıÖµÔ½´ó£¬ÓÅÏÈ¼¶Ô½¸ß
+	int priority;			//æ•°å€¼è¶Šå¤§ï¼Œä¼˜å…ˆçº§è¶Šé«˜
 	int id;
-	int length;				//µ¥Î»ÊÇ£º¸öÊ±¼äÆ¬
-	int progress;			//µ¥Î»ÊÇ£º¸öÊ±¼äÆ¬
-	int wait;				//µ¥Î»ÊÇ£º¸öÊ±¼äÆ¬
+	int length;				//å•ä½æ˜¯ï¼šä¸ªæ—¶é—´ç‰‡
+	int progress;			//å•ä½æ˜¯ï¼šä¸ªæ—¶é—´ç‰‡
+	int wait;				//å•ä½æ˜¯ï¼šä¸ªæ—¶é—´ç‰‡
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "RoundRobin.h"
+ï»¿#include "RoundRobin.h"
 
 RoundRobin::RoundRobin()
 {
@@ -10,7 +10,7 @@ RoundRobin::RoundRobin(int timeSlice)
 	this->aviId = 1;
 	this->index = -1;
 
-	//³õÊ¼»¯ÁÙ½çÇø 
+	//åˆå§‹åŒ–ä¸´ç•ŒåŒº 
 	InitializeCriticalSection(&mutex);
 }
 
@@ -28,7 +28,7 @@ void RoundRobin::Start()
 
 void RoundRobin::AddMisssion(int missionLen)
 {
-	//´´½¨Êı¾İ°ü
+	//åˆ›å»ºæ•°æ®åŒ…
 	Data * data = new Data();
 	data->point = this;
 	data->missionLen = missionLen;
@@ -38,44 +38,44 @@ void RoundRobin::AddMisssion(int missionLen)
 
 void RoundRobin::ThreadStart(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	RoundRobin * p = (RoundRobin*)param;
 
 	while (1)
 	{
-		//ÕâÀï²»ÓÃ¼ÓËø£¬²»ÓÃµ£ĞÄ¼ì²â²»¿Õ£¬Í»È»±»±ğµÄÏß³ÌÇå¿ÕRamµÄÇé¿ö£¬ÒòÎªÖ»ÓĞÕâ¸öÏß³Ì¿ÉÒÔÇå³ıÈÎÎñ
-		if (!p->Ram.empty())		//ÓĞÈÎÎñ
+		//è¿™é‡Œä¸ç”¨åŠ é”ï¼Œä¸ç”¨æ‹…å¿ƒæ£€æµ‹ä¸ç©ºï¼Œçªç„¶è¢«åˆ«çš„çº¿ç¨‹æ¸…ç©ºRamçš„æƒ…å†µï¼Œå› ä¸ºåªæœ‰è¿™ä¸ªçº¿ç¨‹å¯ä»¥æ¸…é™¤ä»»åŠ¡
+		if (!p->Ram.empty())		//æœ‰ä»»åŠ¡
 		{
-			//·²ÊÇ¸ù¾İindex·ÃÎÊRamµÄÓï¾ä¶¼Òª¼ÓËø£¬ÒòÎªÌí¼ÓÈÎÎñÊ±ÒªÈ·±£ËûÃÇÊÇÍ¬²½±ä»¯µÄ
+			//å‡¡æ˜¯æ ¹æ®indexè®¿é—®Ramçš„è¯­å¥éƒ½è¦åŠ é”ï¼Œå› ä¸ºæ·»åŠ ä»»åŠ¡æ—¶è¦ç¡®ä¿ä»–ä»¬æ˜¯åŒæ­¥å˜åŒ–çš„
 
 			EnterCriticalSection(&(p->mutex));				
-			p->Ram[p->index].state = MissionState::RUN;		//¸ü¸ÄÈÎÎñ×´Ì¬
+			p->Ram[p->index].state = MissionState::RUN;		//æ›´æ”¹ä»»åŠ¡çŠ¶æ€
 			LeaveCriticalSection(&(p->mutex));				
 
-			Sleep(p->timeSlice);							//ÈÎÎñÔËĞĞÒ»¸öÊ±¼äÆ¬
+			Sleep(p->timeSlice);							//ä»»åŠ¡è¿è¡Œä¸€ä¸ªæ—¶é—´ç‰‡
 
 			EnterCriticalSection(&(p->mutex));
-			p->Ram[p->index].progress++;					//½ø¶È¼ÓÒ»£¬×¢Òâ£ºÕâ¸ö½ø¶ÈÒªÏòÏÂÈ¡Õû£¬ÒòÎª¾«¶ÈÊÇ¡°¸ö¡±£¬ËùÒÔÊÇÔËĞĞÍêÒ»¸öÊ±¼äÆ¬²ÅÄÜ++
+			p->Ram[p->index].progress++;					//è¿›åº¦åŠ ä¸€ï¼Œæ³¨æ„ï¼šè¿™ä¸ªè¿›åº¦è¦å‘ä¸‹å–æ•´ï¼Œå› ä¸ºç²¾åº¦æ˜¯â€œä¸ªâ€ï¼Œæ‰€ä»¥æ˜¯è¿è¡Œå®Œä¸€ä¸ªæ—¶é—´ç‰‡æ‰èƒ½++
 
-			//ÈÎÎñ×´Ì¬µ÷Õû
-			if (p->Ram[p->index].progress == p->Ram[p->index].length)		//Èç¹ûÈÎÎñÍê³É
+			//ä»»åŠ¡çŠ¶æ€è°ƒæ•´
+			if (p->Ram[p->index].progress == p->Ram[p->index].length)		//å¦‚æœä»»åŠ¡å®Œæˆ
 			{
 				p->Ram[p->index].state = MissionState::FNISH;
 
-				//Ğ´
+				//å†™
 //				EnterCriticalSection(&(p->mutex));
-				//ĞèÒª´ÓÊı×éÖĞÇå³ı
+				//éœ€è¦ä»æ•°ç»„ä¸­æ¸…é™¤
 				p->Ram.erase(p->Ram.begin() + p->index);
 				p->index--;
 //				LeaveCriticalSection(&(p->mutex));
 			}
-			else															//Èç¹ûÈÎÎñÃ»ÓĞÍê³É
+			else															//å¦‚æœä»»åŠ¡æ²¡æœ‰å®Œæˆ
 			{
 				p->Ram[p->index].state = MissionState::READY;
 			}
 
-			//indexÇĞ»»µ½ÏÂÒ»¸öÈÎÎñ
-			//Ğ´
+			//indexåˆ‡æ¢åˆ°ä¸‹ä¸€ä¸ªä»»åŠ¡
+			//å†™
 //			EnterCriticalSection(&(p->mutex));
 			if (!p->Ram.empty())
 			{
@@ -91,20 +91,20 @@ void RoundRobin::ThreadStart(LPVOID param)
 
 void RoundRobin::ThreadAddMisssion(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	RoundRobin * p = ((Data*)param)->point;
 	int len = ((Data*)param)->missionLen;
 	delete param;
 
-	//´´½¨Ò»¸öÈÎÎñ
+	//åˆ›å»ºä¸€ä¸ªä»»åŠ¡
 	Mission mission;
 	mission.length = len;
 	mission.progress = 0;
 	mission.state = MissionState::READY;
 
 
-	//Õâ¸öµØ·½Òª¼ÓÒ»°ÑËø£¬²»È»¶¼Ò»ÆğÀ´»áÂÒ
-	//Ğ´
+	//è¿™ä¸ªåœ°æ–¹è¦åŠ ä¸€æŠŠé”ï¼Œä¸ç„¶éƒ½ä¸€èµ·æ¥ä¼šä¹±
+	//å†™
 	EnterCriticalSection(&(p->mutex));
 	mission.id = p->aviId;
 	p->aviId++;
@@ -123,32 +123,32 @@ void RoundRobin::ThreadAddMisssion(LPVOID param)
 
 void RoundRobin::ThreadDisPlayState(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	RoundRobin * p = (RoundRobin*)param;
 
 	while (1)
 	{
 		system("cls");
-		cout << "×÷Òµ×´Ì¬" << " | " << "×÷ÒµID" << " | " << "×÷Òµ³¤¶È" << " | " << "½ø¶È" << endl;
+		cout << "ä½œä¸šçŠ¶æ€" << " | " << "ä½œä¸šID" << " | " << "ä½œä¸šé•¿åº¦" << " | " << "è¿›åº¦" << endl;
 
-		//¶Á
+		//è¯»
 		EnterCriticalSection(&(p->mutex));
 		for (int i = 0; i < p->Ram.size(); i++)
 		{
-			//¸Ä¸ÄÊä³öµÄ¸ñÊ½
+			//æ”¹æ”¹è¾“å‡ºçš„æ ¼å¼
 			cout << "  ";
 			if (p->Ram[i].state == MissionState::READY)
-				cout << "¾ÍĞ÷";
+				cout << "å°±ç»ª";
 			else if (p->Ram[i].state == MissionState::RUN)
-				cout << "ÔËĞĞ";
+				cout << "è¿è¡Œ";
 			else
-				cout << "Íê³É";
+				cout << "å®Œæˆ";
 
 			cout << "		" << p->Ram[i].id << "	" << p->Ram[i].length << "      " << p->Ram[i].progress << endl;
 		}
 		LeaveCriticalSection(&(p->mutex));
 
-		cout << "ÊäÈëÈÎÎñ³¤¶È²¢»Ø³µ¼´¿ÉÌí¼ÓĞÂÈÎÎñ£º" << endl;
+		cout << "è¾“å…¥ä»»åŠ¡é•¿åº¦å¹¶å›è½¦å³å¯æ·»åŠ æ–°ä»»åŠ¡ï¼š" << endl;
 	}
 }
 

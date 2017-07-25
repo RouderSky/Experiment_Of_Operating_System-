@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include <windows.h>
 #include <process.h>
 #include <iostream>
@@ -23,13 +23,13 @@ public:
 	DyPriority(int timeSlice);
 	~DyPriority();
 
-	//´¦Àí»ú¿ªÊ¼ÔËÐÐ,ÔÚÆäÖÐ¿ªÆôÁ½¸öÏß³Ì£ºÒ»¸öÏß³ÌÓÃÓÚ´¦Àíµ÷¶È£¬ÁíÒ»¸öÏß³ÌÓÃÓÚÏÔÊ¾µ±Ç°´¦Àí»ú×´Ì¬
+	//å¤„ç†æœºå¼€å§‹è¿è¡Œ,åœ¨å…¶ä¸­å¼€å¯ä¸¤ä¸ªçº¿ç¨‹ï¼šä¸€ä¸ªçº¿ç¨‹ç”¨äºŽå¤„ç†è°ƒåº¦ï¼Œå¦ä¸€ä¸ªçº¿ç¨‹ç”¨äºŽæ˜¾ç¤ºå½“å‰å¤„ç†æœºçŠ¶æ€
 	void Start();
 
-	//Îª´¦Àí»úÌí¼ÓÈÎÎñ£¬ÔÚÆäÖÐ¿ªÆôÒ»¸öÏß³Ì£»¸ÃÏß³ÌÌí¼ÓÍêÈÎÎñºó¾Í±»¹Ø±Õ£»
+	//ä¸ºå¤„ç†æœºæ·»åŠ ä»»åŠ¡ï¼Œåœ¨å…¶ä¸­å¼€å¯ä¸€ä¸ªçº¿ç¨‹ï¼›è¯¥çº¿ç¨‹æ·»åŠ å®Œä»»åŠ¡åŽå°±è¢«å…³é—­ï¼›
 	void AddMisssion(int missionLen,int priority);
 
-	//Á½¸öÐ´Õß£¬Ò»¸ö¶ÁÕß
+	//ä¸¤ä¸ªå†™è€…ï¼Œä¸€ä¸ªè¯»è€…
 	static void ThreadStart(LPVOID param);
 	static void ThreadDisPlayState(LPVOID param);
 	static void ThreadAddMisssion(LPVOID param);
@@ -37,15 +37,15 @@ public:
 private:
 	DyPriority();
 
-	//´¦Àí»úµÄÊ±¼äÆ¬³¤¶È
+	//å¤„ç†æœºçš„æ—¶é—´ç‰‡é•¿åº¦
 	int _timeSlice;
 
-	//´æ´¢µ±Ç°ÄÚ´æÖÐµÄÈÎÎñ
+	//å­˜å‚¨å½“å‰å†…å­˜ä¸­çš„ä»»åŠ¡
 	vector<Mission> _Ram;
 
-	//µ±Ç°¿É·ÖÅäÈÎÎñID
+	//å½“å‰å¯åˆ†é…ä»»åŠ¡ID
 	int _aviId;
 
-	//ÁÙ½çÇø
+	//ä¸´ç•ŒåŒº
 	CRITICAL_SECTION _mutex;
 };

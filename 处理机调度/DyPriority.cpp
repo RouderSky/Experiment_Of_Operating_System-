@@ -1,4 +1,4 @@
-#include "DyPriority.h"
+ï»¿#include "DyPriority.h"
 
 
 DyPriority::DyPriority()
@@ -10,7 +10,7 @@ DyPriority::DyPriority(int timeSlice)
 	this->_timeSlice = timeSlice;
 	this->_aviId = 1;
 
-	//³õÊ¼»¯ÁÙ½çÇø 
+	//åˆå§‹åŒ–ä¸´ç•ŒåŒº 
 	InitializeCriticalSection(&_mutex);
 }
 
@@ -28,7 +28,7 @@ void DyPriority::Start()
 
 void DyPriority::AddMisssion(int missionLen, int priority)
 {
-	//´´½¨Êı¾İ°ü
+	//åˆ›å»ºæ•°æ®åŒ…
 	Data2 * data = new Data2();
 	data->point = this;
 	data->missionLen = missionLen;
@@ -39,13 +39,13 @@ void DyPriority::AddMisssion(int missionLen, int priority)
 
 void DyPriority::ThreadStart(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	DyPriority * p = (DyPriority*)param;
 
 	while (1)
 	{
-		//ÕâÀï²»ÓÃ¼ÓËø£¬²»ÓÃµ£ĞÄ¼ì²â²»¿Õ£¬Í»È»±»±ğµÄÏß³ÌÇå¿ÕRamµÄÇé¿ö£¬ÒòÎªÖ»ÓĞÕâ¸öÏß³Ì¿ÉÒÔÇå³ıÈÎÎñ
-		if (!p->_Ram.empty())		//ÓĞÈÎÎñ
+		//è¿™é‡Œä¸ç”¨åŠ é”ï¼Œä¸ç”¨æ‹…å¿ƒæ£€æµ‹ä¸ç©ºï¼Œçªç„¶è¢«åˆ«çš„çº¿ç¨‹æ¸…ç©ºRamçš„æƒ…å†µï¼Œå› ä¸ºåªæœ‰è¿™ä¸ªçº¿ç¨‹å¯ä»¥æ¸…é™¤ä»»åŠ¡
+		if (!p->_Ram.empty())		//æœ‰ä»»åŠ¡
 		{
 			EnterCriticalSection(&(p->_mutex));
 			int needToRun = p->_Ram.size() - 1;
@@ -64,22 +64,22 @@ void DyPriority::ThreadStart(LPVOID param)
 						needToRun = i;
 				}
 
-				//Ë¢µôËùÓĞµÄ×´Ì¬
+				//åˆ·æ‰æ‰€æœ‰çš„çŠ¶æ€
 				p->_Ram[i].state = MissionState::READY;
 			}
 
-			//ÓÅÏÈ¼¶×î¸ßµÄ±ä³ÉÔËĞĞ×´Ì¬
+			//ä¼˜å…ˆçº§æœ€é«˜çš„å˜æˆè¿è¡ŒçŠ¶æ€
 			p->_Ram[needToRun].state = MissionState::RUN;
 
 			LeaveCriticalSection(&(p->_mutex));
 
-			Sleep(p->_timeSlice);							//ÈÎÎñÔËĞĞÒ»¸öÊ±¼äÆ¬
+			Sleep(p->_timeSlice);							//ä»»åŠ¡è¿è¡Œä¸€ä¸ªæ—¶é—´ç‰‡
 
 			EnterCriticalSection(&(p->_mutex));
 			p->_Ram[needToRun].progress++;
 			if (p->_Ram[needToRun].progress == p->_Ram[needToRun].length)
 			{
-				//ÒÑÍê³ÉµÄÖ±½ÓÉ¾³ı
+				//å·²å®Œæˆçš„ç›´æ¥åˆ é™¤
 				p->_Ram[needToRun].state = MissionState::FNISH;
 				p->_Ram.erase(p->_Ram.begin() + needToRun);
 			}
@@ -91,13 +91,13 @@ void DyPriority::ThreadStart(LPVOID param)
 
 void DyPriority::ThreadAddMisssion(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	DyPriority * p = ((Data2*)param)->point;
 	int len = ((Data2*)param)->missionLen;
 	int prio = ((Data2*)param)->priority;
 	delete param;
 
-	//´´½¨Ò»¸öÈÎÎñ
+	//åˆ›å»ºä¸€ä¸ªä»»åŠ¡
 	Mission mission;
 	mission.length = len;
 	mission.progress = 0;
@@ -105,8 +105,8 @@ void DyPriority::ThreadAddMisssion(LPVOID param)
 	mission.state = MissionState::READY;
 
 
-	//Õâ¸öµØ·½Òª¼ÓÒ»°ÑËø£¬²»È»¶¼Ò»ÆğÀ´»áÂÒ
-	//Ğ´
+	//è¿™ä¸ªåœ°æ–¹è¦åŠ ä¸€æŠŠé”ï¼Œä¸ç„¶éƒ½ä¸€èµ·æ¥ä¼šä¹±
+	//å†™
 	EnterCriticalSection(&(p->_mutex));
 	mission.id = p->_aviId;
 	p->_aviId++;
@@ -120,32 +120,32 @@ void DyPriority::ThreadAddMisssion(LPVOID param)
 
 void DyPriority::ThreadDisPlayState(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	DyPriority * p = (DyPriority*)param;
 
 	while (1)
 	{
 		system("cls");
-		cout << "×÷Òµ×´Ì¬" << " | " << "×÷ÒµID" << " | " << "×÷Òµ³¤¶È" << " | " << "½ø¶È" << " | " << "ÓÅÏÈ¼¶" << endl;
+		cout << "ä½œä¸šçŠ¶æ€" << " | " << "ä½œä¸šID" << " | " << "ä½œä¸šé•¿åº¦" << " | " << "è¿›åº¦" << " | " << "ä¼˜å…ˆçº§" << endl;
 
-		//¶Á
+		//è¯»
 		EnterCriticalSection(&(p->_mutex));
 		for (int i = 0; i < p->_Ram.size(); i++)
 		{
-			//¸Ä¸ÄÊä³öµÄ¸ñÊ½
+			//æ”¹æ”¹è¾“å‡ºçš„æ ¼å¼
 			cout << "  ";
 			if (p->_Ram[i].state == MissionState::READY)
-				cout << "¾ÍĞ÷";
+				cout << "å°±ç»ª";
 			else if (p->_Ram[i].state == MissionState::RUN)
-				cout << "ÔËĞĞ";
+				cout << "è¿è¡Œ";
 			else
-				cout << "Íê³É";
+				cout << "å®Œæˆ";
 
 			cout << "		" << p->_Ram[i].id << "	" << p->_Ram[i].length << "      " << p->_Ram[i].progress << "      " << p->_Ram[i].priority << endl;
 		}
 		LeaveCriticalSection(&(p->_mutex));
 
-		cout << "ÊäÈëÈÎÎñ³¤¶ÈÒÔ¼°ÈÎÎñÓÅÏÈ¼¶²¢»Ø³µ¼´¿ÉÌí¼ÓĞÂÈÎÎñ£º" << endl;
+		cout << "è¾“å…¥ä»»åŠ¡é•¿åº¦ä»¥åŠä»»åŠ¡ä¼˜å…ˆçº§å¹¶å›è½¦å³å¯æ·»åŠ æ–°ä»»åŠ¡ï¼š" << endl;
 	}
 }
 

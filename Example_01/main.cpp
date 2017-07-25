@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <iostream>
 using namespace std;
 
@@ -7,7 +7,7 @@ DWORD WINAPI FunOne(LPVOID param)
 	while (*(int*)param)
 	{
 		cout << "hello!";
-		Sleep(1000);    //ÎªÊ²Ã´È¥µôÁËSleepÖ®ºó£¬Ïß³Ì¹ÒÆğÖ®ºó¾ÍÃ»°ì·¨ÔÙ»Ö¸´ÁË£¿
+		Sleep(1000);    //ä¸ºä»€ä¹ˆå»æ‰äº†Sleepä¹‹åï¼Œçº¿ç¨‹æŒ‚èµ·ä¹‹åå°±æ²¡åŠæ³•å†æ¢å¤äº†ï¼Ÿ
 	}
 	return 0;
 }
@@ -17,7 +17,7 @@ DWORD WINAPI FunTwo(LPVOID param)
 	while (*(int*)param)
 	{
 		cout << "world!";
-		Sleep(1000);	//ÎªÊ²Ã´È¥µôÁËSleepÖ®ºó£¬Ïß³Ì¹ÒÆğÖ®ºó¾ÍÃ»°ì·¨ÔÙ»Ö¸´ÁË£¿
+		Sleep(1000);	//ä¸ºä»€ä¹ˆå»æ‰äº†Sleepä¹‹åï¼Œçº¿ç¨‹æŒ‚èµ·ä¹‹åå°±æ²¡åŠæ³•å†æ¢å¤äº†ï¼Ÿ
 	}
 	return 0;
 }
@@ -26,7 +26,7 @@ int main()
 {
 	int input = 1;
 
-	//´´½¨Ïß³Ì
+	//åˆ›å»ºçº¿ç¨‹
 	HANDLE hand1 = CreateThread(NULL, 0, FunOne, (void*)&input, CREATE_SUSPENDED, NULL);
 	HANDLE hand2 = CreateThread(NULL, 0, FunTwo, (void*)&input, CREATE_SUSPENDED, NULL);
 
@@ -36,8 +36,8 @@ int main()
 		cin >> input;
 		if (input==1)
 		{
-			ResumeThread(hand1);   //Ïß³ÌÆô¶¯Ö®ºó¾Í»á·ÖÊ±¼äÆ¬,ÎÊÌâÊÇÎªÊ²Ã´ÓĞÊ±ºòÃ»ÓĞ°ì·¨»Ø¸´Ïß³Ì?
-			ResumeThread(hand2);   //Ïß³ÌÆô¶¯Ö®ºó¾Í»á·ÖÊ±¼äÆ¬
+			ResumeThread(hand1);   //çº¿ç¨‹å¯åŠ¨ä¹‹åå°±ä¼šåˆ†æ—¶é—´ç‰‡,é—®é¢˜æ˜¯ä¸ºä»€ä¹ˆæœ‰æ—¶å€™æ²¡æœ‰åŠæ³•å›å¤çº¿ç¨‹?
+			ResumeThread(hand2);   //çº¿ç¨‹å¯åŠ¨ä¹‹åå°±ä¼šåˆ†æ—¶é—´ç‰‡
 		} 
 		else
 		{

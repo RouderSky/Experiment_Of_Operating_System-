@@ -1,5 +1,5 @@
-//--------------------------------------------
-/*Copyright (c) 2016 ÍõºéÌÎ rights reserved.*/
+ï»¿//--------------------------------------------
+/*Copyright (c) 2016 ç‹æ´ªæ¶› rights reserved.*/
 //--------------------------------------------
 #include "StdAfx.h"
 #include <windows.h>
@@ -7,55 +7,55 @@
 #include <tchar.h>
 using namespace std;
 
-//¶¨Òå×ùÎ»Êı
-#define NUMOFSEAT 30			//×ÜÆ±Êı
-int a[NUMOFSEAT];				//Ã¿¸öÎ»ÖÃ¶ÔÓ¦µÄÆ±Êı
-CRITICAL_SECTION cs[NUMOFSEAT];	//´´½¨ÁÙ½çÇø
+//å®šä¹‰åº§ä½æ•°
+#define NUMOFSEAT 30			//æ€»ç¥¨æ•°
+int a[NUMOFSEAT];				//æ¯ä¸ªä½ç½®å¯¹åº”çš„ç¥¨æ•°
+CRITICAL_SECTION cs[NUMOFSEAT];	//åˆ›å»ºä¸´ç•ŒåŒº
 
-//Ïß³Ì
+//çº¿ç¨‹
 DWORD ThreadProc(void * pData)
 {
-	//µçÓ°Æ±±àºÅ
+	//ç”µå½±ç¥¨ç¼–å·
 	int num = (*(int*)pData);		
 
-	////////////////////////ÒÔÏÂÊÇÁÙ½çÇø
-	//´ò¿ª¶ÔÓ¦µÄ»¥³âÁ¿
+	////////////////////////ä»¥ä¸‹æ˜¯ä¸´ç•ŒåŒº
+	//æ‰“å¼€å¯¹åº”çš„äº’æ–¥é‡
 // 	HANDLE hMutex;
 // 	char nameBuffer[100];
 // 	memset(nameBuffer, 0, sizeof(nameBuffer));
 // 	sprintf_s(nameBuffer, "%d", num);
 // 	if ((hMutex = OpenMutex(MUTEX_ALL_ACCESS,FALSE,nameBuffer)) == NULL)		//.....
 // 	{
-// 		cout << "×ÊÔ´Õ¼ÓÃÊ§°Ü" << endl;
+// 		cout << "èµ„æºå ç”¨å¤±è´¥" << endl;
 // 		return 0;
 // 	}
 
-	//½øÈëÁÙ½çÇø
+	//è¿›å…¥ä¸´ç•ŒåŒº
 	EnterCriticalSection(&cs[num]);		
 
-	cout << num << "ºÅ×ùÎ»¿ªÊ¼Ô¤¶©" << endl;
+	cout << num << "å·åº§ä½å¼€å§‹é¢„è®¢" << endl;
 
-	//²Ù×÷ÑÓÊ±
-	Sleep(1000);	//ÔÚÁÙ½çÇøÖĞ²»»á±»¹ÒÆğ£¿
+	//æ“ä½œå»¶æ—¶
+	Sleep(1000);	//åœ¨ä¸´ç•ŒåŒºä¸­ä¸ä¼šè¢«æŒ‚èµ·ï¼Ÿ
 
-	//¼ì²éµ±Ç°ËùÑ¡Î»ÖÃÊÇ·ñÓĞÆ±
-	if (a[num]>0)	//ÓĞÆ±
+	//æ£€æŸ¥å½“å‰æ‰€é€‰ä½ç½®æ˜¯å¦æœ‰ç¥¨
+	if (a[num]>0)	//æœ‰ç¥¨
 	{
 		a[num]--;
-		cout << num << "ºÅ×ùÎ»Ô¤¶©Íê³É" << endl;
+		cout << num << "å·åº§ä½é¢„è®¢å®Œæˆ" << endl;
 	}
-	else			//ÎŞÆ±
+	else			//æ— ç¥¨
 	{
-		cout << num << "ºÅ×ùÎ»ÒÑ¾­±»Ô¤¶©" << endl;
+		cout << num << "å·åº§ä½å·²ç»è¢«é¢„è®¢" << endl;
 	}
 
-	//ÍË³öÁÙ½çÇø
+	//é€€å‡ºä¸´ç•ŒåŒº
 	LeaveCriticalSection(&cs[num]);
 
-	//²Ù×÷ÑÓÊ±
+	//æ“ä½œå»¶æ—¶
 	Sleep(1000);
 	
-// 	//ÊÍ·Å¶ÔÓ¦»¥³âÁ¿
+// 	//é‡Šæ”¾å¯¹åº”äº’æ–¥é‡
 // 	ReleaseMutex(hMutex);
 // 	////////////////////////
 // 
@@ -66,39 +66,41 @@ DWORD ThreadProc(void * pData)
 
 int main()
 {
-	//³õÊ¼»¯Æ±Êı
+	//åˆå§‹åŒ–ç¥¨æ•°
 	for (int i = 0; i < NUMOFSEAT;i++)
 	{
 		a[i] = 1;
 	}
 
-// 	//´´½¨»¥³âÁ¿
+// 	//åˆ›å»ºäº’æ–¥é‡
 // 	HANDLE hMutex[NUMOFSEAT];
 // 	char nameBuf[100];
 // 	for (int i = 0; i < NUMOFSEAT;i++)
 // 	{
-// 		//³õÊ¼»¯»¥³âÁ¿Êı×é
+// 		//åˆå§‹åŒ–äº’æ–¥é‡æ•°ç»„
 // 		memset(nameBuf, 0, sizeof(nameBuf));
 // 		sprintf_s(nameBuf, "%d", i);
 // 		hMutex[i] = CreateMutex(NULL, FALSE, nameBuf);
 // 		if (hMutex[i] == NULL)
 // 		{
-// 			cout << "»¥³âÁ¿´´½¨Ê§°Ü" << endl;
+// 			cout << "äº’æ–¥é‡åˆ›å»ºå¤±è´¥" << endl;
 // 			return 0;
 // 		}
 // 	}
 
-	//³õÊ¼»¯ÁÙ½çÇø
+	//åˆå§‹åŒ–ä¸´ç•ŒåŒº
 	for (int i = 0; i < NUMOFSEAT;i++)
 	{
 		InitializeCriticalSection(&cs[i]);
 	}
 
-	//ÂòÆ±²Ù×÷
+	cout << "è¾“å…¥åº§ä½å·(0~29)ï¼Œå¹¶å›è½¦å³å¯è®¢ç¥¨ï¼š" << endl;
+
+	//ä¹°ç¥¨æ“ä½œ
 	int select;
 	while (cin >> select)
 	{
-		//¸ù¾İ¶ÁÈëµÄÊı×ÖÈ¥Æô¶¯Ïß³Ì
+		//æ ¹æ®è¯»å…¥çš„æ•°å­—å»å¯åŠ¨çº¿ç¨‹
 		if (select<NUMOFSEAT)
 		{
 			HANDLE h = CreateThread(NULL,
@@ -109,21 +111,21 @@ int main()
 				NULL);
 
 			if (h == NULL)
-				cout << "Ïß³Ì´´½¨Ê§°Ü" << endl;
+				cout << "çº¿ç¨‹åˆ›å»ºå¤±è´¥" << endl;
 		}
 		else
 		{
-			cout << "Ã»ÓĞÕâ¸öÎ»ÖÃ" << endl;
+			cout << "æ²¡æœ‰è¿™ä¸ªä½ç½®" << endl;
 		}
 	}
 
-// 	//¹Ø±ÕËùÓĞ»¥³âÁ¿
+// 	//å…³é—­æ‰€æœ‰äº’æ–¥é‡
 // 	for (int i = 0; i < NUMOFSEAT;i++)
 // 	{
 // 		CloseHandle(hMutex[i]);
 // 	}
 
-	//ÊÍ·ÅÁÙ½çÇø
+	//é‡Šæ”¾ä¸´ç•ŒåŒº
 	for (int i = 0; i < NUMOFSEAT;i++)
 	{
 		DeleteCriticalSection(&cs[i]);

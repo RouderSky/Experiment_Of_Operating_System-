@@ -1,5 +1,5 @@
-//--------------------------------------------
-/*Copyright (c) 2016 ÍõºéÌÎ rights reserved.*/
+ï»¿//--------------------------------------------
+/*Copyright (c) 2016 ç‹æ´ªæ¶› rights reserved.*/
 //--------------------------------------------
 #include "StdAfx.h"
 #include <windows.h>
@@ -7,35 +7,35 @@
 #include <iostream>
 using namespace std;
 
-//ÉùÃ÷ÁÙ½çÇø
-CRITICAL_SECTION mutex;		//ÓÃÓÚ¶ÔÀº×Ó²Ù×÷µÄ»¥³â£¬ÓÃ´¦²»´ó
+//å£°æ˜ä¸´ç•ŒåŒº
+CRITICAL_SECTION mutex;		//ç”¨äºå¯¹ç¯®å­æ“ä½œçš„äº’æ–¥ï¼Œç”¨å¤„ä¸å¤§
 // CRITICAL_SECTION mutexForFirstPutApple;
 // CRITICAL_SECTION mutexForFirstPutOrange;
 // CRITICAL_SECTION mutexForFirstGetApple;
 // CRITICAL_SECTION mutexForFirstGetOrange;
 
-//ÓÃÀ´¼ÇÂ¼´´½¨³öÀ´µÄÏß³Ì¸öÊı
+//ç”¨æ¥è®°å½•åˆ›å»ºå‡ºæ¥çš„çº¿ç¨‹ä¸ªæ•°
 int first_PutApple = 0;
 int first_PutOrange = 0;
 int first_GetApple = 0;
 int first_GetOrange = 0;
 
-//ÉùÃ÷ĞÅºÅÁ¿£¬ÕâÑùÔÚÖ»ĞèÒª¶Ôº¯Êı½øĞĞV²Ù×÷µÄº¯ÊıÖĞ¾Í²»ÓÃOpenÒ»´Î
+//å£°æ˜ä¿¡å·é‡ï¼Œè¿™æ ·åœ¨åªéœ€è¦å¯¹å‡½æ•°è¿›è¡ŒVæ“ä½œçš„å‡½æ•°ä¸­å°±ä¸ç”¨Openä¸€æ¬¡
 HANDLE empty;
 HANDLE apple;
 HANDLE orange;
 
-//Àº×Ó×´Ì¬
+//ç¯®å­çŠ¶æ€
 enum CalathusState{CNO,CAPPLE,CORANGE};
 CalathusState calathusState;
 
-//Ë®¹û
+//æ°´æœ
 enum FruitType{APPLE,ORANGE};
 
-//Ğ´³ÉÒ»¸öº¯Êı²»ºÃ,Ò»¸ö¾¡Á¿½«Ïß³ÌĞ´³É¶à¸öº¯Êı£¬ÕâÑù¿ØÖÆÆğÀ´¸ú·½±ã£¬´úÂë¸ü¾«Á¶
+//å†™æˆä¸€ä¸ªå‡½æ•°ä¸å¥½,ä¸€ä¸ªå°½é‡å°†çº¿ç¨‹å†™æˆå¤šä¸ªå‡½æ•°ï¼Œè¿™æ ·æ§åˆ¶èµ·æ¥è·Ÿæ–¹ä¾¿ï¼Œä»£ç æ›´ç²¾ç‚¼
 void PutFruit(LPVOID param)
 {
-	//Á¢¿Ì×ª»»
+	//ç«‹åˆ»è½¬æ¢
 	FruitType * fruitType = (FruitType*)param;
 	FruitType fruit = *fruitType;
 	delete(fruitType);
@@ -51,40 +51,40 @@ void PutFruit(LPVOID param)
 
 	if (calathusState!=CalathusState::CNO)
 	{
-		cout << "Àº×ÓÓĞË®¹û!ÇëµÈ´ı..." << endl;
+		cout << "ç¯®å­æœ‰æ°´æœ!è¯·ç­‰å¾…..." << endl;
 	}
 	else if (fruit == FruitType::APPLE && first_PutOrange!=0)
 	{
-		cout << "Ä¸Ç×ÒÑÔÚ·Å½Û×Ó!ÇëµÈ´ı..." << endl;
+		cout << "æ¯äº²å·²åœ¨æ”¾æ¡”å­!è¯·ç­‰å¾…..." << endl;
 	}
 	else if (fruit == FruitType::ORANGE && first_PutApple != 0)
 	{
-		cout << "¸¸Ç×ÒÑÔÚ·ÅÆ»¹û!ÇëµÈ´ı..." << endl;
+		cout << "çˆ¶äº²å·²åœ¨æ”¾è‹¹æœ!è¯·ç­‰å¾…..." << endl;
 	}
 
 	WaitForSingleObject(empty, INFINITE);
 
-	EnterCriticalSection(&mutex);	//ÆäÊµÕâÒ»¾ä¿ÉÒÔ³öµô£¬µ±Àº×ÓÈİÁ¿´óÓÚ1ÇÒÒª±£³Ö·ÅË®¹û»¥³âµÄÊ±ºò²Å»áÓÃµ½
+	EnterCriticalSection(&mutex);	//å…¶å®è¿™ä¸€å¥å¯ä»¥å‡ºæ‰ï¼Œå½“ç¯®å­å®¹é‡å¤§äº1ä¸”è¦ä¿æŒæ”¾æ°´æœäº’æ–¥çš„æ—¶å€™æ‰ä¼šç”¨åˆ°
 	if (fruit == FruitType::APPLE)
 	{
-		cout << "¸¸Ç×ÕıÔÚ·ÅÖÃÆ»¹û£¡" << endl;
+		cout << "çˆ¶äº²æ­£åœ¨æ”¾ç½®è‹¹æœï¼" << endl;
 		Sleep(1000);
 
 		calathusState = CalathusState::CAPPLE;
-		ReleaseSemaphore(apple, 1, NULL);		//V²Ù×÷ 
+		ReleaseSemaphore(apple, 1, NULL);		//Væ“ä½œ 
 
-		cout << "Æ»¹û·ÅÖÃÍê±Ï!" << endl;
+		cout << "è‹¹æœæ”¾ç½®å®Œæ¯•!" << endl;
 		Sleep(1000);
 	}
 	else
 	{
-		cout << "Ä¸Ç×ÕıÔÚ·ÅÖÃ½Û×Ó!" << endl;
+		cout << "æ¯äº²æ­£åœ¨æ”¾ç½®æ¡”å­!" << endl;
 		Sleep(1000);
 
 		calathusState = CalathusState::CORANGE;
-		ReleaseSemaphore(orange, 1, NULL);		//V²Ù×÷ 
+		ReleaseSemaphore(orange, 1, NULL);		//Væ“ä½œ 
 
-		cout << "½Û×Ó·ÅÖÃÍê±Ï!" << endl;
+		cout << "æ¡”å­æ”¾ç½®å®Œæ¯•!" << endl;
 		Sleep(1000);
 	}
 	LeaveCriticalSection(&mutex);
@@ -105,20 +105,20 @@ void GetApple(LPVOID param)
 
 	if (calathusState != CalathusState::CAPPLE)
 	{
-		cout << "Àº×ÓÃ»ÓĞÆ»¹û£¬ÇëµÈ´ı..." << endl;
+		cout << "ç¯®å­æ²¡æœ‰è‹¹æœï¼Œè¯·ç­‰å¾…..." << endl;
 	}
 
 	WaitForSingleObject(apple, INFINITE);
 
-	EnterCriticalSection(&mutex);	//ÆäÊµÕâÒ»¾ä¿ÉÒÔ³öµô£¬µ±Àº×ÓÈİÁ¿±È½Ï´óÇÒÒª±£³Ö·ÅË®¹û»¥³âµÄÊ±ºò²Å»áÓÃµ½
+	EnterCriticalSection(&mutex);	//å…¶å®è¿™ä¸€å¥å¯ä»¥å‡ºæ‰ï¼Œå½“ç¯®å­å®¹é‡æ¯”è¾ƒå¤§ä¸”è¦ä¿æŒæ”¾æ°´æœäº’æ–¥çš„æ—¶å€™æ‰ä¼šç”¨åˆ°
 
-	cout << "Å®¶ùÄÃÆ»¹û!" << endl;
+	cout << "å¥³å„¿æ‹¿è‹¹æœ!" << endl;
 	Sleep(1000);
 
 	calathusState = CalathusState::CNO;
 	ReleaseSemaphore(empty, 1, NULL);
 
-	cout << "Æ»¹û±»ÄÃ×ß!" << endl;
+	cout << "è‹¹æœè¢«æ‹¿èµ°!" << endl;
 	Sleep(1000);
 
 	LeaveCriticalSection(&mutex);
@@ -131,20 +131,20 @@ void GetOrange(LPVOID param)
 
 	if (calathusState != CalathusState::CORANGE)
 	{
-		cout << "Àº×ÓÃ»ÓĞéÙ×Ó£¬ÇëµÈ´ı..." << endl;
+		cout << "ç¯®å­æ²¡æœ‰æ©˜å­ï¼Œè¯·ç­‰å¾…..." << endl;
 	}
 
 	WaitForSingleObject(orange, INFINITE);
 
 	EnterCriticalSection(&mutex);
 
-	cout << "¶ù×ÓÄÃéÙ×Ó!" << endl;
+	cout << "å„¿å­æ‹¿æ©˜å­!" << endl;
 	Sleep(1000);
 
 	calathusState = CalathusState::CNO;
 	ReleaseSemaphore(empty, 1, NULL);
 
-	cout << "éÙ×Ó±»ÄÃ×ß!" << endl;
+	cout << "æ©˜å­è¢«æ‹¿èµ°!" << endl;
 	Sleep(1000);
 
 	LeaveCriticalSection(&mutex);
@@ -153,41 +153,43 @@ void GetOrange(LPVOID param)
 
 int main()
 {
-	//Àº×Ó³õÊ¼ÊÇ¿ÕµÄ
+	//ç¯®å­åˆå§‹æ˜¯ç©ºçš„
 	calathusState = CalathusState::CNO;
 
-	//´´½¨ĞÅºÅÁ¿empty 
+	//åˆ›å»ºä¿¡å·é‡empty 
 	if ((empty = CreateSemaphore(NULL, 1, 1, "empty")) == NULL) {		
 		cout << "Create empty error!" << endl;
 		return 0;
 	}
 
-	//´´½¨ĞÅºÅÁ¿apple
+	//åˆ›å»ºä¿¡å·é‡apple
 	if ((apple = CreateSemaphore(NULL, 0, 1, "apple")) == NULL) {
 		cout << "Create apple error!" << endl;
 		return 0;
 	}
 
-	//´´½¨ĞÅºÅÁ¿orange
+	//åˆ›å»ºä¿¡å·é‡orange
 	if ((orange = CreateSemaphore(NULL, 0, 1, "orange")) == NULL) {
 		cout << "Create orange error!" << endl;
 		return 0;
 	}
 
-	//³õÊ¼»¯ÁÙ½çÇø 
+	//åˆå§‹åŒ–ä¸´ç•ŒåŒº 
 	InitializeCriticalSection(&mutex);
 //	InitializeCriticalSection(&mutexForFirstPutApple);
 //	InitializeCriticalSection(&mutexForFirstPutOrange);
 //	InitializeCriticalSection(&mutexForFirstGetApple);
 //	InitializeCriticalSection(&mutexForFirstGetOrange);
 
-	//²Ù×÷
+	cout << "è¾“å…¥æ•°å­—1~4å¹¶å›è½¦å³å¯å‘å‡ºå‘½ä»¤ï¼š\n" << "1ä»£è¡¨çˆ¶äº²æ”¾è‹¹æœ\n" << "2ä»£è¡¨æ¯äº²æ”¾æ©˜å­\n" << "3ä»£è¡¨å„¿å­æ‹¿æ©˜å­\n" << "4ä»£è¡¨å¥³å„¿æ‹¿è‹¹æœ\n" << "psï¼šç¯®å­åªæœ‰ä¸€ä¸ªä½ç½®\n";
+
+	//æ“ä½œ
 	int operation;
 	FruitType * fruitType;
 //	HANDLE hTread = NULL;
 	while (cin >> operation)
 	{
-		if (operation==1)		//¸¸Ç×
+		if (operation==1)		//çˆ¶äº²
 		{
 			if (first_PutApple==0)
 			{
@@ -196,9 +198,9 @@ int main()
 				_beginthread(PutFruit, 0, fruitType);
 			}
 			else
-				cout << "²»¿É¼ÌĞø´´½¨¸ÃÏß³Ì" << endl;
+				cout << "ä¸å¯ç»§ç»­åˆ›å»ºè¯¥çº¿ç¨‹" << endl;
 		}
-		else if (operation==2)	//Ä¸Ç×
+		else if (operation==2)	//æ¯äº²
 		{
 			if (first_PutOrange == 0)
 			{
@@ -207,30 +209,30 @@ int main()
 				_beginthread(PutFruit, 0, fruitType);
 			}
 			else
-				cout << "²»¿É¼ÌĞø´´½¨¸ÃÏß³Ì" << endl;
+				cout << "ä¸å¯ç»§ç»­åˆ›å»ºè¯¥çº¿ç¨‹" << endl;
 		}
-		else if (operation==3)	//¶ù×Ó
+		else if (operation==3)	//å„¿å­
 		{
 			if (first_GetOrange == 0)
 			{
 				_beginthread(GetOrange, 0, NULL);
 			}
 			else
-				cout << "²»¿É¼ÌĞø´´½¨¸ÃÏß³Ì" << endl;
+				cout << "ä¸å¯ç»§ç»­åˆ›å»ºè¯¥çº¿ç¨‹" << endl;
 		}
-		else if(operation==4)	//Å®¶ù
+		else if(operation==4)	//å¥³å„¿
 		{
 			if (first_GetApple == 0)
 			{
 				_beginthread(GetApple, 0, NULL);
 			}
 			else
-				cout << "²»¿É¼ÌĞø´´½¨¸ÃÏß³Ì" << endl;
+				cout << "ä¸å¯ç»§ç»­åˆ›å»ºè¯¥çº¿ç¨‹" << endl;
 		}
-//		CloseHandle(hTread);	//²»ĞèÒª¶ÔÏß³Ì½øĞĞ¶îÍâµÄ²Ù×÷¾Í¿ÉÒÔÊÍ·Å
+//		CloseHandle(hTread);	//ä¸éœ€è¦å¯¹çº¿ç¨‹è¿›è¡Œé¢å¤–çš„æ“ä½œå°±å¯ä»¥é‡Šæ”¾
 	}
 
-	//¹Ø±ÕĞÅºÅÁ¿
+	//å…³é—­ä¿¡å·é‡
 	CloseHandle(empty);
 	CloseHandle(apple);
 	CloseHandle(orange);

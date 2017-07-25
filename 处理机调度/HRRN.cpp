@@ -1,4 +1,4 @@
-#include "HRRN.h"
+ï»¿#include "HRRN.h"
 
 HRRN::HRRN()
 {
@@ -9,7 +9,7 @@ HRRN::HRRN(int timeSlice)
 	this->_timeSlice = timeSlice;
 	this->_aviId = 1;
 
-	//³õÊ¼»¯ÁÙ½çÇø 
+	//åˆå§‹åŒ–ä¸´ç•ŒåŒº 
 	InitializeCriticalSection(&_mutex);
 }
 
@@ -27,7 +27,7 @@ void HRRN::Start()
 
 void HRRN::AddMisssion(int missionLen)
 {
-	//´´½¨Êı¾İ°ü
+	//åˆ›å»ºæ•°æ®åŒ…
 	Data3 * data = new Data3();
 	data->point = this;
 	data->missionLen = missionLen;
@@ -37,17 +37,17 @@ void HRRN::AddMisssion(int missionLen)
 
 void HRRN::ThreadStart(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	HRRN * p = (HRRN*)param;
 
 	while (1)
 	{
-		//ÕâÀï²»ÓÃ¼ÓËø£¬²»ÓÃµ£ĞÄ¼ì²â²»¿Õ£¬Í»È»±»±ğµÄÏß³ÌÇå¿ÕRamµÄÇé¿ö£¬ÒòÎªÖ»ÓĞÕâ¸öÏß³Ì¿ÉÒÔÇå³ıÈÎÎñ
-		if (!p->_Ram.empty())		//ÓĞÈÎÎñ
+		//è¿™é‡Œä¸ç”¨åŠ é”ï¼Œä¸ç”¨æ‹…å¿ƒæ£€æµ‹ä¸ç©ºï¼Œçªç„¶è¢«åˆ«çš„çº¿ç¨‹æ¸…ç©ºRamçš„æƒ…å†µï¼Œå› ä¸ºåªæœ‰è¿™ä¸ªçº¿ç¨‹å¯ä»¥æ¸…é™¤ä»»åŠ¡
+		if (!p->_Ram.empty())		//æœ‰ä»»åŠ¡
 		{
-			//¸Ä±äwaitÊı¾İºÍÉ¨ÃèRunÈÎÎñ
+			//æ”¹å˜waitæ•°æ®å’Œæ‰«æRunä»»åŠ¡
 			EnterCriticalSection(&(p->_mutex));
-			int needToRun = -1;								//¼ÇÂ¼µÈÏÂĞèÒªÔËĞĞµÄÈÎÎñ,Ñ­»·½áÊøºó»¹ÊÇ-1µÄ»°Ö¤Ã÷µ±Ç°Ã»ÓĞÈÎÎñÔÚÔËĞĞ
+			int needToRun = -1;								//è®°å½•ç­‰ä¸‹éœ€è¦è¿è¡Œçš„ä»»åŠ¡,å¾ªç¯ç»“æŸåè¿˜æ˜¯-1çš„è¯è¯æ˜å½“å‰æ²¡æœ‰ä»»åŠ¡åœ¨è¿è¡Œ
 			for (int i = p->_Ram.size() - 1; i >= 0; i--)
 			{
 				if (p->_Ram[i].state == MissionState::READY)
@@ -57,12 +57,12 @@ void HRRN::ThreadStart(LPVOID param)
 			}
 			LeaveCriticalSection(&(p->_mutex));
 
-			Sleep(p->_timeSlice);							//ÈÎÎñÔËĞĞÒ»¸öÊ±¼äÆ¬
+			Sleep(p->_timeSlice);							//ä»»åŠ¡è¿è¡Œä¸€ä¸ªæ—¶é—´ç‰‡
 
 			EnterCriticalSection(&(p->_mutex));
-			if (needToRun == -1)	//µ±Ç°Ã»ÓĞÔËĞĞÈÎÎñ
+			if (needToRun == -1)	//å½“å‰æ²¡æœ‰è¿è¡Œä»»åŠ¡
 			{
-				//Ö´ĞĞ¸ßÏìÓ¦±ÈËã·¨
+				//æ‰§è¡Œé«˜å“åº”æ¯”ç®—æ³•
 				if (!p->_Ram.empty())
 				{
 					float hr = 1 + (p->_Ram[0].wait / p->_Ram[0].length);
@@ -77,13 +77,13 @@ void HRRN::ThreadStart(LPVOID param)
 						}
 					}
 
-					//½ö¸Ä±ä×´Ì¬£¬²¢Ã»ÓĞÔËĞĞÆğÀ´£¬ÏÂÒ»´ÎÑ­»·²ÅÔËĞĞ
+					//ä»…æ”¹å˜çŠ¶æ€ï¼Œå¹¶æ²¡æœ‰è¿è¡Œèµ·æ¥ï¼Œä¸‹ä¸€æ¬¡å¾ªç¯æ‰è¿è¡Œ
 					p->_Ram[key].state = MissionState::RUN;
 				}
 			}
 			else 
 			{
-				//ÔËĞĞÄÇ¸ö´¦ÓÚÔËĞĞ×´Ì¬µÄÈÎÎñ
+				//è¿è¡Œé‚£ä¸ªå¤„äºè¿è¡ŒçŠ¶æ€çš„ä»»åŠ¡
 				p->_Ram[needToRun].progress++;
 				if (p->_Ram[needToRun].progress == p->_Ram[needToRun].length)
 				{
@@ -98,12 +98,12 @@ void HRRN::ThreadStart(LPVOID param)
 
 void HRRN::ThreadAddMisssion(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	HRRN * p = ((Data3*)param)->point;
 	int len = ((Data3*)param)->missionLen;
 	delete param;
 
-	//´´½¨Ò»¸öÈÎÎñ
+	//åˆ›å»ºä¸€ä¸ªä»»åŠ¡
 	Mission mission;
 	mission.length = len;
 	mission.progress = 0;
@@ -111,8 +111,8 @@ void HRRN::ThreadAddMisssion(LPVOID param)
 	mission.state = MissionState::READY;
 
 
-	//Õâ¸öµØ·½Òª¼ÓÒ»°ÑËø£¬²»È»¶¼Ò»ÆğÀ´»áÂÒ
-	//Ğ´
+	//è¿™ä¸ªåœ°æ–¹è¦åŠ ä¸€æŠŠé”ï¼Œä¸ç„¶éƒ½ä¸€èµ·æ¥ä¼šä¹±
+	//å†™
 	EnterCriticalSection(&(p->_mutex));
 	mission.id = p->_aviId;
 	p->_aviId++;
@@ -126,32 +126,32 @@ void HRRN::ThreadAddMisssion(LPVOID param)
 
 void HRRN::ThreadDisPlayState(LPVOID param)
 {
-	//Ç¿ÖÆÀàĞÍ×°»»
+	//å¼ºåˆ¶ç±»å‹è£…æ¢
 	HRRN * p = (HRRN*)param;
 
 	while (1)
 	{
 		system("cls");
-		cout << "×÷Òµ×´Ì¬" << " | " << "×÷ÒµID" << " | " << "×÷Òµ³¤¶È" << " | " << "½ø¶È" << " | " << "µÈ´ıÊ±¼ä" << endl;
+		cout << "ä½œä¸šçŠ¶æ€" << " | " << "ä½œä¸šID" << " | " << "ä½œä¸šé•¿åº¦" << " | " << "è¿›åº¦" << " | " << "ç­‰å¾…æ—¶é—´" << endl;
 
-		//¶Á
+		//è¯»
 		EnterCriticalSection(&(p->_mutex));
 		for (int i = 0; i < p->_Ram.size(); i++)
 		{
-			//¸Ä¸ÄÊä³öµÄ¸ñÊ½
+			//æ”¹æ”¹è¾“å‡ºçš„æ ¼å¼
 			cout << "  ";
 			if (p->_Ram[i].state == MissionState::READY)
-				cout << "¾ÍĞ÷";
+				cout << "å°±ç»ª";
 			else if (p->_Ram[i].state == MissionState::RUN)
-				cout << "ÔËĞĞ";
+				cout << "è¿è¡Œ";
 			else
-				cout << "Íê³É";
+				cout << "å®Œæˆ";
 
 			cout << "		" << p->_Ram[i].id << "	" << p->_Ram[i].length << "      " << p->_Ram[i].progress << "      " << p->_Ram[i].wait << endl;
 		}
 		LeaveCriticalSection(&(p->_mutex));
 
-		cout << "ÊäÈëÈÎÎñ³¤¶È²¢»Ø³µ¼´¿ÉÌí¼ÓĞÂÈÎÎñ£º" << endl;
+		cout << "è¾“å…¥ä»»åŠ¡é•¿åº¦å¹¶å›è½¦å³å¯æ·»åŠ æ–°ä»»åŠ¡ï¼š" << endl;
 	}
 }
 
